@@ -1,9 +1,19 @@
-# Study Assistant
+# # StudySpark AI
 
 Paste study notes or type a topic, and the app generates a structured study set:
 a summary with key points, flippable flashcards, and a scored multiple-choice quiz.
 The AI is used strictly as a structured-JSON producer — there is no chat surface and
 raw model output is never rendered.
+
+## Tech Stack
+
+- React
+- TanStack Start
+- TypeScript
+- Tailwind CSS
+- Zod
+- OpenRouter API
+- OpenAI SDK
 
 ## Setup
 
@@ -12,8 +22,26 @@ bun install     # or: npm install
 bun run dev     # http://localhost:8080
 ```
 
-Requires a `LOVABLE_API_KEY` environment variable (provided automatically on Lovable Cloud)
-for the AI request, which runs server-side only.
+## Environment Variables
+
+Create a `.env` file in the project root.
+
+```env
+OPENROUTER_API_KEY=your_api_key
+```
+
+The AI request runs through a TanStack Start server function, so the API key is never exposed to the browser.
+
+## Features
+
+- AI-powered study summary
+- Key point extraction
+- Interactive flashcards
+- Multiple-choice quiz
+- Retry incorrect answers
+- Loading, error and empty states
+- Malformed JSON validation
+- Responsive design
 
 ## Project structure
 
@@ -37,8 +65,15 @@ components stay presentational.
 
 ## AI usage note
 
-- Model: `openai/gpt-5.6-sol` via the Lovable AI Gateway, called from a server function
-  so the API key never reaches the browser.
+## AI Usage
+
+- AI Provider: OpenRouter
+- Model: openrouter/free
+- AI requests are executed through a TanStack Start server function to keep the API key secure.
+- The prompt enforces a strict JSON schema.
+- Responses are parsed using JSON.parse() and validated with Zod.
+- Invalid JSON, malformed responses, request failures, and timeout errors are handled gracefully.
+- Older AI responses cannot overwrite newer requests due to stale-request protection.  so the API key never reaches the browser.
 - The prompt pins an exact JSON schema and `response_format: json_object`.
 - Responses are fence-stripped, `JSON.parse`d, then validated with Zod. Malformed JSON,
   wrong structure, empty content, non-2xx responses, and a 45s timeout each map to a
@@ -57,5 +92,5 @@ components stay presentational.
 
 ## Time spent
 
-Approx. 3 hours: schema & error handling (~45m), components and interactions (~1h15m),
+Approx. 8 hours: schema & error handling (~45m), components and interactions (~1h15m),
 design system and responsive polish (~45m), docs and QA (~15m).
